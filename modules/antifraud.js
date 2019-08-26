@@ -92,6 +92,48 @@ async function report(args, callback) {
                 out += "( no data yet )";
             callback(out);
             break;
+        case 'x3':
+            out += "Anti-Fraud Report 3\n"+
+                "**Auction seller got their card back**\n"+
+                "Auction ID - Transaction ID\n"
+            docs = await mongodb.collection('transactions').aggregate([
+                    {$match:
+                        {
+							"status":"auction", 
+                            "time": {$gt:new Date(new Date() -5)}
+                        }
+                    },
+                    {"$sort": {"factor": -1}},
+                    {"$limit": 40}
+            ]).toArray();
+            for ( let doc of docs ) {
+                out += parseFloat(doc.factor).toFixed(1) +' - '+ doc.aucId +' - '+ utils.formatDate(doc.date) +"\n";
+            }
+            if ( docs.length == 0 )
+                out += "( no data yet )";
+            callback(out);
+            break;
+        case '4':
+            out += "Anti-Fraud Report 4\n"+
+                "**Suspected slave accounts**\n"+
+                "Auction ID - Transaction ID\n"
+            docs = await mongodb.collection('transactions').aggregate([
+                    {$match:
+                        {
+							"status":"auction", 
+                            "time": {$gt:new Date(new Date() -5)}
+                        }
+                    },
+                    {"$sort": {"factor": -1}},
+                    {"$limit": 40}
+            ]).toArray();
+            for ( let doc of docs ) {
+                out += parseFloat(doc.factor).toFixed(1) +' - '+ doc.aucId +' - '+ utils.formatDate(doc.date) +"\n";
+            }
+            if ( docs.length == 0 )
+                out += "( no data yet )";
+            callback(out);
+            break;
         default:
             callback("Available reports:\n"+
                     "```1 - Players whose auctions always seem to have a buyer\n"+

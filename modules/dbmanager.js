@@ -77,7 +77,7 @@ function connect(bot, shard, shardCount, callback) {
 
         if(shard == 0) {
             let deletDate = new Date();
-            deletDate.setDate(deletDate.getDate() - 5);
+            deletDate.setDate(deletDate.getDate() - 30);
             db.collection('transactions').remove({time: {$lt: deletDate}}).then(res => {
                 console.log("Removed old transactions: " + res.result.n);
             });
